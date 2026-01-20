@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import HomeScreen from './screens/HomeScreen';
 
 export default function App() {
@@ -27,7 +28,11 @@ export default function App() {
     );
   }
 
-  return <HomeScreen />;
+  return (
+    <SafeAreaProvider>
+      <HomeScreen />
+    </SafeAreaProvider>
+  );
 }
 
 const styles = StyleSheet.create({

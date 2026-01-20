@@ -6,14 +6,18 @@ import {
   StatusBar,
   Dimensions,
   ScrollView,
-  SafeAreaView,
   Animated,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { weeklyExercises } from '../data/exercises';
 import ExerciseNavigationButtons from '../components/ExerciseNavigationButtons';
 import UShapeProgress from '../components/UShapeProgress';
 
 const { width, height } = Dimensions.get('window');
+
+// Responsive scaling
+const SCALE = width / 375;
+const scale = (size) => Math.round(size * SCALE);
 
 export default function HomeScreen() {
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
@@ -37,13 +41,13 @@ export default function HomeScreen() {
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim, {
-        toValue: -20,
+        toValue: -15,
         duration: 150,
         useNativeDriver: true,
       }),
     ]).start(() => {
       // Reset and fade in
-      slideAnim.setValue(20);
+      slideAnim.setValue(15);
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
@@ -82,8 +86,10 @@ export default function HomeScreen() {
     }
   };
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <StatusBar barStyle="dark-content" backgroundColor="#E7E9E8" />
       
       {/* Day Swiper */}
@@ -99,7 +105,9 @@ export default function HomeScreen() {
         {weeklyExercises.map((dayData, dayIndex) => (
           <View key={dayData.dayNumber} style={[styles.dayContainer, { width }]}>
             {/* Vertical Day Name Background */}
-            <Text style={styles.verticalDayName}>{dayData.day.toUpperCase()}</Text>
+            <Text style={[styles.verticalDayName, { fontSize: scale(60), left: scale(-130) }]}>
+              {dayData.day.toUpperCase()}
+            </Text>
             
             <ScrollView 
               showsVerticalScrollIndicator={false}
@@ -128,9 +136,6 @@ export default function HomeScreen() {
                     {currentExercise.sets}-{currentExercise.reps || currentExercise.duration}
                   </Text>
 
-                  {/* Exercise Name */}
-                  <Text style={styles.exerciseName}>{currentExercise.name}</Text>
-
                   {/* Exercise Description */}
                   <Text style={styles.exerciseDescription}>{currentExercise.description}</Text>
                 </Animated.View>
@@ -147,7 +152,7 @@ export default function HomeScreen() {
         onPrevious={handlePreviousExercise}
         onNext={handleNextExercise}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -164,10 +169,7 @@ const styles = StyleSheet.create({
   },
   verticalDayName: {
     position: 'absolute',
-    left: -130,
-    top: '40%',
-    fontSize: 75,
-    fontWeight: 'bold',
+    top: '50%',
     fontFamily: 'Montserrat-Bold',
     color: '#000000',
     opacity: 0.05,
@@ -181,8 +183,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 0,
-    paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingHorizontal: scale(20),
+    paddingBottom: scale(40),
   },
   exerciseCard: {
     backgroundColor: '#E7E9E8',
@@ -196,30 +198,21 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   setsRepsText: {
-    fontSize: 48,
+    fontSize: scale(40),
     fontWeight: 'bold',
     fontFamily: 'Montserrat-Bold',
     color: '#000000',
     textAlign: 'center',
-    marginTop: 30,
-    marginBottom: 20,
+    marginTop: scale(20),
+    marginBottom: scale(15),
   },
-  exerciseName: {
-    fontSize: 22,
-    fontWeight: '600',
+  exerciseDescription: {
+    fontSize: scale(16),
     fontFamily: 'Montserrat-SemiBold',
     color: '#000000',
     textAlign: 'center',
-    paddingHorizontal: 30,
-    marginBottom: 20,
-  },
-  exerciseDescription: {
-    fontSize: 16,
-    fontFamily: 'Montserrat-Regular',
-    color: '#555555',
-    textAlign: 'center',
-    lineHeight: 24,
-    paddingHorizontal: 40,
+    lineHeight: scale(22),
+    paddingHorizontal: scale(40),
     maxWidth: 500,
   },
 });

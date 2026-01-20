@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ExerciseNavigationButtons({ 
   currentIndex, 
@@ -13,11 +14,12 @@ export default function ExerciseNavigationButtons({
   onPrevious, 
   onNext 
 }) {
+  const insets = useSafeAreaInsets();
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === totalExercises - 1;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingBottom: 30 + insets.bottom }]}>
       <View style={styles.buttonGroup}>
         {/* Left Arrow Button */}
         <TouchableOpacity

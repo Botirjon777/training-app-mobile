@@ -85,3 +85,7 @@ $env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
 $env:Path += ";$env:JAVA_HOME\bin"
 
 & "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" reverse tcp:8081 tcp:8081
+
+build release
+
+$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"; $env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"; $env:Path += ";$env:JAVA_HOME\bin"; npx expo run:android --variant release
