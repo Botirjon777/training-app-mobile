@@ -1,77 +1,49 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import * as Font from 'expo-font';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import HomeScreen from './screens/HomeScreen';
-import DayExercisesScreen from './screens/DayExercisesScreen';
-import ExerciseDetailScreen from './screens/ExerciseDetailScreen';
-import ProfileScreen from './screens/ProfileScreen';
-import StatsScreen from './screens/StatsScreen';
-import SettingsScreen from './screens/SettingsScreen';
-import CustomTabBar from './components/CustomTabBar';
-
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-
-// Stack navigator for the Train tab
-function TrainStack() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        animation: 'slide_from_right',
-      }}
-    >
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="DayExercises" component={DayExercisesScreen} />
-      <Stack.Screen name="ExerciseDetail" component={ExerciseDetailScreen} />
-    </Stack.Navigator>
-  );
-}
 
 export default function App() {
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        'Montserrat-Regular': require('./assets/fonts/Montserrat/static/Montserrat-Regular.ttf'),
+        'Montserrat-Medium': require('./assets/fonts/Montserrat/static/Montserrat-Medium.ttf'),
+        'Montserrat-SemiBold': require('./assets/fonts/Montserrat/static/Montserrat-SemiBold.ttf'),
+        'Montserrat-Bold': require('./assets/fonts/Montserrat/static/Montserrat-Bold.ttf'),
+      });
+      setFontLoaded(true);
+    }
+    loadFonts();
+  }, []);
+
+  if (!fontLoaded) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Загрузка...</Text>
+      </View>
+    );
+  }
+
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        tabBar={(props) => <CustomTabBar {...props} />}
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Tab.Screen 
-          name="Profile" 
-          component={ProfileScreen}
-          options={{
-            tabBarIcon: '👤',
-          }}
-        />
-        <Tab.Screen 
-          name="Stats" 
-          component={StatsScreen}
-          options={{
-            tabBarIcon: '📊',
-          }}
-        />
-        <Tab.Screen 
-          name="Train" 
-          component={TrainStack}
-        />
-        <Tab.Screen 
-          name="Calendar" 
-          component={SettingsScreen}
-          options={{
-            tabBarIcon: '📅',
-            tabBarLabel: 'Calendar',
-          }}
-        />
-        <Tab.Screen 
-          name="Settings" 
-          component={SettingsScreen}
-          options={{
-            tabBarIcon: '⚙️',
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <HomeScreen />
+    </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#E7E9E8',
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#000000',
+  },
+});
