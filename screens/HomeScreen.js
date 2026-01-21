@@ -9,7 +9,7 @@ import {
   Animated,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { weeklyExercises } from '../data/exercises';
+import { weeklyExercises, videoSources } from '../data/exercises';
 import ExerciseNavigationButtons from '../components/ExerciseNavigationButtons';
 import UShapeProgress from '../components/UShapeProgress';
 
@@ -30,6 +30,14 @@ export default function HomeScreen() {
 
   const currentDayData = weeklyExercises[selectedDayIndex];
   const currentExercise = currentDayData.exercises[currentExerciseIndex];
+  const currentVideoSource = videoSources[currentExercise.video];
+  const getSetsRepsText = (exercise) => {
+    const repsValue = exercise.reps ?? exercise.duration;
+    if (repsValue === undefined || repsValue === null || repsValue === "") {
+      return `${exercise.sets}`;
+    }
+    return `${exercise.sets}-${repsValue}`;
+  };
 
   // Animate content when exercise changes
   useEffect(() => {
@@ -119,6 +127,8 @@ export default function HomeScreen() {
                 <UShapeProgress 
                   currentExercise={currentExerciseIndex + 1}
                   totalExercises={currentDayData.exercises.length}
+                  videoSource={currentVideoSource}
+                  videoKey={currentExercise.id}
                 />
 
                 {/* Animated Exercise Content */}
@@ -133,7 +143,7 @@ export default function HomeScreen() {
                 >
                   {/* Sets/Reps Display */}
                   <Text style={styles.setsRepsText}>
-                    {currentExercise.sets}-{currentExercise.reps || currentExercise.duration}
+                    {getSetsRepsText(currentExercise)}
                   </Text>
 
                   {/* Exercise Description */}

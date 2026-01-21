@@ -73,11 +73,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 50,
     paddingHorizontal: 5,
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
   },
   sideButton: {
     width: 70,
@@ -104,6 +99,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
   indicatorText: {
     fontSize: 28,
